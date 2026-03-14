@@ -1,9 +1,16 @@
 --sprites - values are tables
 dclr[[
+cld_types={
+	p1={},
+	p_atk={p_atk=1,bad_spr=1},
+	bad_spr={p_atk=1}
+},
+
 g_sprts={
 
 p1={
 	type=p1,
+	cat=good,
 	spr=0,
 	row=1,
 	y=72,
@@ -12,33 +19,34 @@ p1={
 		idle=p_idle
 	},
 	axn=idle,
-	cat=good,
 	height=2
 },
 
 p_sword={
 	type=p_atk,
+	cat=good,
 	atk=1,
-	spr=3,
-	cat=good
+	spr=3
 },
 
 p_slash={
 	type=p_atk,
+	cat=good,
 	atk=1,
 	spr=4,
-	cat=good
 },
 
 bat={
-	type=spr,
+	type=bad_spr,
+	cat=bad,
 	spr=5,
 	life=2,
 	spd=0.75,
+	spd=1,
 	anims={
 		go=bat_go
 	},
-	cat=bad
+	ai=ai_base_bad
 }
 
 }
