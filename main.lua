@@ -1,0 +1,149 @@
+--[[
+RULES:
+- sprites should only ever be stored in good&bad. Nowhere else
+- inert property only lasts for the frame before entering and before exiting
+- call spawn or despawn, never manually add/remove
+- axn_func and set_anim call fundamental mk_axn which calls async. Use these toplevels and never manual.
+- mk_efx for effects. Sprite can only ever have 1 action, but unlimited effects.
+- function with c_ are meant for coroutines and have yield
+- never create other coroutines within a coroutine since they occur while being looped over.
+]]
+
+function _init()
+	cls(1)
+
+	dclr[[
+	row_y={80,88,96},
+	good={},
+	bad={},
+	to_del={},
+	to_add={},
+	routines={},
+	bad_strt=138,
+	melee_x=22
+	]]
+
+	p1=spawn"p1"
+	set_anim(p1,p1.anims.idle)
+
+	level=lvl_1
+
+	map_init()
+end
+
+function _update()
+	local row = p1.row
+	local axn = p1.axn
+
+	--INPUT HANLDING--
+	--movement
+	if btnp(2) and axn=="idle" and row > 1 then 
+		axn_row_mv(p1,-1)
+	elseif btnp(3) and axn=="idle" and row < 3 then 
+		axn_row_mv(p1,1)
+	end
+	--attack
+	if btnp(4) and axn=="idle" then
+		local atk = mk_atk("p_sword",p1)
+		axn_atk_launch(atk)
+		sfx(3)
+		axn_p1_atk_rcvr()
+	end
+
+	function updt_prevx(arr)
+		foreach(arr,function(a)
+			a.prev_x=a.x
+		end)
+	end
+	updt_prevx(good)
+	updt_prevx(bad)
+
+
+	--Coroutine Handling
+	--RULE - all spawns and deletions happen here or before!
+	for k,v in pairs(routines) do
+		if costatus(v) == "dead" then
+			routines[k] = nil
+		else
+			assert(coresume(v))
+		end
+	end
+
+
+
+	function collided(a,b)
+		local a_left,a_right=min(a.prev_x,a.x),max(a.prev_x,a.x)
+		local b_left,b_right=min(b.prev_x,b.x),max(b.prev_x,b.x)
+		return b_left+2 <= a_right+5 and b_right+5 >= a_left+2
+	end
+
+	--collision (inert checks repeated since a could become inert from a previous collision)
+	for i=1,#good do
+		local a=good[i]
+		if (a.inert) goto cont
+		for j=i+1,#good do
+			local b=good[j]
+			if not b.inert and not a.inert and a.id != b.id and a.row == b.row and collided(a,b) then
+				good_hit(a,b)
+			end
+		end
+		for k=1,#bad do
+			local c=bad[k]
+			if not c.inert and not a.inert and a.row==c.row and collided(a,c) then
+				bad_hit(a,c)
+			end
+		end
+		::cont::
+	end
+
+	--particles
+	updt_parts()
+
+	-- --add/remove
+	foreach(to_add,function(a)
+		create(a)
+	end)
+	foreach(to_del,function(a)
+		delete(a)
+	end)
+	to_add = {}
+	to_del = {}
+
+	map_update()
+	update_lvl(level)
+end
+
+function _draw()
+	cls()
+
+	map_draw()
+
+	foreach(good,function(a) 
+		draw_spr(a)
+	end)
+	foreach(bad,function(a) 
+		if (a.dmgflash) then
+			for i=2,15 do
+				pal(i,7)
+			end
+		end
+		draw_spr(a) 
+		pal()
+	end)
+	foreach(parts,function(p)
+		rect(p.x,p.y,p.x,p.y,p.c)
+	end)
+
+	foreach(logs,function(msg)
+		? msg
+	end)
+end
+
+function draw_spr(a)
+	local height = a.height or 1
+	spr(a.spr,a.x,a.y,1,height)
+end
+
+function get_rowy(sprt, row)
+	return row_y[row] - (sprt.height - 1)*8
+end
