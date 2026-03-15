@@ -1,4 +1,5 @@
 --sprites - values are tables
+--type is meant for specific collision checking while cat is more general. Super specific is name. Everyone should have cat and type.
 dclr[[
 cld_types={
 	p1={},
@@ -24,16 +25,36 @@ p1={
 
 p_sword={
 	type=p_atk,
+	name=p_sword,
 	cat=good,
-	atk=1,
+	atk=2,
 	spr=3
+},
+
+p_shield={
+	type=p_atk,
+	name=p_shield,
+	cat=good,
+	atk=0,
+	push=60,
+	spr=19
 },
 
 p_slash={
 	type=p_atk,
+	name=p_slash,
 	cat=good,
 	atk=1,
 	spr=4,
+},
+
+p_bash={
+	type=p_atk,
+	name=p_bash,
+	cat=good,
+	atk=0,
+	push=10,
+	spr=20
 },
 
 bat={

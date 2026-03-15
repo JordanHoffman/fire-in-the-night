@@ -1,8 +1,7 @@
 function axn_bad_go(spr)
 	mk_axn(spr,function()
-		spr.axn = "go"
 		c_move(spr,"x",melee_x,nil,spr.spd)
-	end)
+	end,"go")
 end
 
 function efx_dmg(spr)
@@ -19,7 +18,6 @@ end
 function axn_bad_melee(spr)
 	mk_axn(spr, {
 		function()
-			spr.axn="melee"
 			while true do
 				c_wait(20)
 				c_move(spr,"x", p1.x,3)
@@ -33,5 +31,5 @@ function axn_bad_melee(spr)
 				c_move(spr,"y",get_rowy(spr,spr.row),10)
 			end
 		end
-	})
+	},"melee")
 end

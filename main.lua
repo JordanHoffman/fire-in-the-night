@@ -20,7 +20,8 @@ function _init()
 	to_add={},
 	routines={},
 	bad_strt=138,
-	melee_x=22
+	melee_x=22,
+	prtcls={}
 	]]
 
 	p1=spawn"p1"
@@ -45,6 +46,12 @@ function _update()
 	--attack
 	if btnp(4) and axn=="idle" then
 		local atk = mk_atk("p_sword",p1)
+		axn_atk_launch(atk)
+		sfx(3)
+		axn_p1_atk_rcvr()
+	end
+	if btnp(5) and axn=="idle" then
+		local atk = mk_atk("p_shield",p1)
 		axn_atk_launch(atk)
 		sfx(3)
 		axn_p1_atk_rcvr()
@@ -104,8 +111,13 @@ function _update()
 		end
 	end)
 
-	--particles
-	updt_parts()
+	--udpate particles
+	foreach(prtcls,function(p)
+		p.life-=1
+		p.x+=p.dx
+		p.y+=p.dy
+		if (p.life<=0) del(prtcls,p)
+	end)
 
 	-- --add/remove
 	foreach(to_add,function(a)
@@ -138,8 +150,9 @@ function _draw()
 		draw_spr(a) 
 		pal()
 	end)
-	foreach(parts,function(p)
-		rect(p.x,p.y,p.x,p.y,p.c)
+	foreach(prtcls,function(p)
+		p.type = p.type or "circfill"
+		_ENV[p.type](p.x,p.y,p.r,p.c)
 	end)
 
 	foreach(logs,function(msg)

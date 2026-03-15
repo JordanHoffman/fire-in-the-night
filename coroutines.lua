@@ -14,8 +14,8 @@ function add_axn(spr,fx,clear)
 end
 
 --can pass a single fx or an array of fx's if the axn needs multiple, but your longest axn MUST be first since it clears when finished
-function mk_axn(spr, fx)
-	kill_axn(spr)
+function mk_axn(spr, fx, name)
+	kill_axn(spr,name)
 	local clear=true
 	if type(fx)=="table" then
 		foreach(fx, function(func)
@@ -27,17 +27,17 @@ function mk_axn(spr, fx)
 	end
 end
 
-function clr_axn(spr)
+function clr_axn(spr,name)
 	spr.axn_ids={}
-	spr.axn="idle"
+	spr.axn=name or "idle"
 end
 
 --NEVER call within actions.
-function kill_axn(spr)
+function kill_axn(spr,name)
 	foreach(spr.axn_ids, function(id)
 		routines[id] = nil
 	end)
-	clr_axn(spr)
+	clr_axn(spr,name)
 end
 
 
