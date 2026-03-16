@@ -8,16 +8,19 @@ function create(spr)
 	end
 end
 
---creates & returns the actual sprite
+--preps & returns the actual sprite
 function spawn(spr_name)
 	local spr=cpy_t(g_sprts[spr_name])
 	spr.inert = true
 	spr.id=uid()
 	spr.height = spr.height or 1
 	spr.life=spr.life or 1
+	spr.atk=spr.atk or 1
 	spr.efx={}
 	spr.anim=nil
 	spr.axn_ids={}
+	--key/value: spr id & countdown till it can hit it again (prevent rapid multi-hits each frame). Only needed for good.
+	spr.hit_list={}
 	add(to_add,spr)
 	return spr
 end
@@ -36,4 +39,14 @@ function delete(spr)
 	else
 		del(bad,spr)
 	end
+end
+
+function prep_prtcl(prtcl) 
+	prtcl.type=prtcl.type or "circfill"
+	prtcl.clr_range=prtcl.clr_range or {}
+	prtcl.r=prtcl.r or 0
+	prtcl.dx=prtcl.dx or 0
+	prtcl.dy=prtcl.dy or 0
+	prtcl.dr=prtcl.dr or 0
+	return prtcl
 end

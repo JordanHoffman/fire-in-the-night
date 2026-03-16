@@ -19,9 +19,10 @@ function _init()
 	to_del={},
 	to_add={},
 	routines={},
-	bad_strt=138,
+	bad_strt=130,
 	melee_x=22,
-	prtcls={}
+	prtcls={},
+	hit_timer=10
 	]]
 
 	p1=spawn"p1"
@@ -76,35 +77,32 @@ function _update()
 		end
 	end
 
-	function collided(a,b)
-		if a.inert or b.inert or a.row != b.row or a.id == b.id or not cld_types[a.type][b.type] then
-			return false
-		end
-		local a_left,a_right=min(a.prev_x,a.x),max(a.prev_x,a.x)
-		local b_left,b_right=min(b.prev_x,b.x),max(b.prev_x,b.x)
-		return b_left+2 <= a_right+5 and b_right+5 >= a_left+2
-	end
-
 	--collision (inert checks repeated since a could become inert from a previous collision)
 	for i=1,#good do
-		local a=good[i]
-		if (a.inert) goto cont
+		local g=good[i]
+		if (g.inert) goto cont
 		for j=i+1,#good do
-			local b=good[j]
-			if collided(a,b) then
-				good_hit(a,b)
+			local g2=good[j]
+			if collided(g,g2) then
+				good_hit(g,g2)
 			end
 		end
 		for k=1,#bad do
-			local c=bad[k]
-			if collided(a,c) then
-				bad_hit(a,c)
+			local b=bad[k]
+			if collided(g,b) then
+				bad_hit(g,b)
 			end
 		end
 		::cont::
 	end
 
 	--ai & all other updates
+	foreach(good,function(g)
+		for k, v in pairs(g.hit_list) do
+			if (v<=0) v=hit_timer
+			v-=1
+		end
+	end)
 	foreach(bad,function(b) 
 		if (b.ai) then
 			_ENV[b.ai](b)
@@ -116,6 +114,7 @@ function _update()
 		p.life-=1
 		p.x+=p.dx
 		p.y+=p.dy
+		p.r+=p.dr
 		if (p.life<=0) del(prtcls,p)
 	end)
 
@@ -139,6 +138,11 @@ function _draw()
 	map_draw()
 
 	foreach(good,function(a) 
+		if (a.dmgflash) then
+			for i=2,15 do
+				pal(i,1)
+			end
+		end
 		draw_spr(a)
 	end)
 	foreach(bad,function(a) 

@@ -28,23 +28,26 @@ p_sword={
 	name=p_sword,
 	cat=good,
 	atk=2,
-	spr=3
+	spr=3,
+	dur=45
 },
 
 p_shield={
 	type=p_atk,
 	name=p_shield,
 	cat=good,
+	life=3,
 	atk=0,
 	push=60,
-	spr=19
+	stun=60,
+	spr=19,
+	dur=90
 },
 
 p_slash={
 	type=p_atk,
 	name=p_slash,
 	cat=good,
-	atk=1,
 	spr=4,
 },
 
@@ -53,7 +56,9 @@ p_bash={
 	name=p_bash,
 	cat=good,
 	atk=0,
-	push=10,
+	life=1,
+	push=30,
+	stun=30,
 	spr=20
 },
 
@@ -63,7 +68,6 @@ bat={
 	spr=5,
 	life=2,
 	spd=0.75,
-	spd=1,
 	anims={
 		go=bat_go
 	},

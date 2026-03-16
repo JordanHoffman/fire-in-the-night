@@ -14,20 +14,11 @@ freq: fastest to slowest spawn rate in frames
 frm: timer for frames
 ]]
 
--- dclr[[
--- lvl_1={
--- total=20,
--- types={bat},
--- amt_odds={60,30,10},
--- freq={15,60}
--- }
--- ]]
-
 dclr[[
 lvl_1={
-total=1,
+total=20,
 types={bat},
-amt_odds={100,0,0},
+amt_odds={60,30,10},
 freq={15,60}
 }
 ]]
@@ -44,7 +35,7 @@ function update_lvl(lvl)
 	if choice <= one then
 		--spawn 1
 		local row = flr(rnd(3)) + 1
-		mk_bat(row)
+		mk_bat(1)
 		lvl.total-=1
 	elseif choice <= one + two then
 		--spawn 2

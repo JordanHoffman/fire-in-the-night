@@ -22,7 +22,7 @@ end
 --axn included here b/c this can be called midaction and needs to transition name
 function c_atk_wait(atk)
 	atk.axn="wait"
-	c_wait(45)
+	c_wait(atk.dur)
 end
 
 function axn_slash(atk)
@@ -47,15 +47,14 @@ end
 
 function efx_good_hit(spr)
 	for i=1,10 do
-		add(prtcls,{
+		add(prtcls,prep_prtcl({
 			x=spr.x+4,
 			y=spr.y+4,
 			c=10,
 			life=5,
-			r=0,
 			dx=rnd(2),
 			dy=rnd(4) - 2
-		})
+		}))
 	end
 end
 
@@ -64,24 +63,23 @@ function axn_push(g,b)
 	mk_axn(b,function()
 		sfx(1)
 		c_move(b,"x",b.x+g.push,nil,10)
-		c_dizzy(b)
+		if(g.stun) c_dizzy(b,g.stun)
 	end,"knockback")
 end
 
-function c_dizzy(spr)
+function c_dizzy(spr,time)
 	spr.axn = "dizzy"
 	for i=1,5 do
 		local type = flr(rnd(2)) == 1 and "circ" or "circfill"
-		add(prtcls,{
+		add(prtcls,prep_prtcl({
 			type=type,
 			x=spr.x+2+flr(rnd(5)),
 			y=spr.y-flr(rnd(3)),
 			c=10,
 			life=8,
-			dx=0,
 			r=1,
-			dy=-0.25-rnd(0.25),
-		})
-		c_wait(10)
+			dy=-0.25-rnd(0.25)
+		}))
+		c_wait(time/5)
 	end
 end
