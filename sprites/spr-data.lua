@@ -16,6 +16,7 @@ p1={
 	row=1,
 	y=72,
 	x=8,
+	life=2,
 	anims={
 		idle=p_idle
 	},
@@ -68,6 +69,7 @@ bat={
 	spr=5,
 	life=2,
 	spd=0.75,
+	spd=5,
 	anims={
 		go=bat_go
 	},

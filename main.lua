@@ -144,10 +144,11 @@ function _draw()
 	foreach(good,function(a) 
 		if (a.dmgflash) then
 			for i=2,15 do
-				pal(i,1)
+				pal(i,a.type=="p1" and 8 or 1)
 			end
 		end
 		draw_spr(a)
+		pal()
 	end)
 	foreach(bad,function(a) 
 		if (a.dmgflash) then

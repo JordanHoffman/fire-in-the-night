@@ -88,7 +88,7 @@ function efx_dmg_p(bad)
 	p1.life-=bad.atk
 	if p1.life > 0 then
 		efx_dmg(p1)
-		async(function()
+		mk_efx(p1,function()
 			for i=1,10 do
 				add(prtcls,prep_prtcl({
 					type="circ",
@@ -96,14 +96,27 @@ function efx_dmg_p(bad)
 					dr=4.5,
 					ddr=-0.3-i/200,
 					life=18,
-					c=i<6 and 7 or 10,
 					c=i&1==0 and 7 or 10,
 					x=p1.x+4,
 					y=row_y[p1.row]+4
 				}))
 				c_wait(1)
 			end
-		end)
+		end,"nova")
+		for i=1,3 do
+			local nova = mk_atk("p_shield",p1)
+			nova.spr=100
+			nova.dur=5
+			nova.life=1000
+			nova.row=i
+			nova.x=p1.x
+			nova.y=row_y[i]
+			axn_atk_launch(nova)
+		end
+
+		mk_efx(p1,function()
+			c_wait(30)
+		end,"invul")
 	else
 		efx_bad_explode(p1)
 		despawn(p1)
