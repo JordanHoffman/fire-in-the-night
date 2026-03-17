@@ -48,5 +48,6 @@ function prep_prtcl(prtcl)
 	prtcl.dx=prtcl.dx or 0
 	prtcl.dy=prtcl.dy or 0
 	prtcl.dr=prtcl.dr or 0
+	prtcl.ddr=prtcl.ddr or 0
 	return prtcl
 end

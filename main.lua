@@ -1,4 +1,7 @@
 --[[
+TODO:
+- player health, knockback nova on hit
+
 RULES:
 - sprites should only ever be stored in good&bad. Nowhere else
 - inert property only lasts for the frame before entering and before exiting
@@ -115,6 +118,7 @@ function _update()
 		p.x+=p.dx
 		p.y+=p.dy
 		p.r+=p.dr
+		p.dr+=p.ddr*p.dr
 		if (p.life<=0) del(prtcls,p)
 	end)
 

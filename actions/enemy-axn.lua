@@ -4,17 +4,6 @@ function axn_bad_go(spr)
 	end,"go")
 end
 
-function efx_dmg(spr)
-	mk_efx(spr,function()
-		for i=1,2 do
-			spr.dmgflash=true
-			c_wait(2)
-			spr.dmgflash=false
-			c_wait(3)
-		end
-	end,"dmg_flash")
-end
-
 function axn_bad_melee(spr)
 	mk_axn(spr, {
 		function()
@@ -22,6 +11,7 @@ function axn_bad_melee(spr)
 				c_wait(20)
 				c_move(spr,"x", p1.x,3)
 				c_move(spr,"x", melee_x,10)
+				p1.life-=1
 			end
 		end,
 		function()

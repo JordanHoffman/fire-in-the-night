@@ -83,3 +83,29 @@ function c_dizzy(spr,time)
 		c_wait(time/5)
 	end
 end
+
+function efx_dmg_p(bad)
+	p1.life-=bad.atk
+	if p1.life > 0 then
+		efx_dmg(p1)
+		async(function()
+			for i=1,10 do
+				add(prtcls,prep_prtcl({
+					type="circ",
+					r=1,
+					dr=4.5,
+					ddr=-0.3-i/200,
+					life=18,
+					c=i<6 and 7 or 10,
+					c=i&1==0 and 7 or 10,
+					x=p1.x+4,
+					y=row_y[p1.row]+4
+				}))
+				c_wait(1)
+			end
+		end)
+	else
+		efx_bad_explode(p1)
+		despawn(p1)
+	end
+end

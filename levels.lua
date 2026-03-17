@@ -17,6 +17,7 @@ frm: timer for frames
 dclr[[
 lvl_1={
 total=20,
+total=0,
 types={bat},
 amt_odds={60,30,10},
 freq={15,60}
