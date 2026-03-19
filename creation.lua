@@ -21,12 +21,12 @@ function spawn(spr_name)
 	spr.axn_ids={}
 	--key/value: spr id & countdown till it can hit it again (prevent rapid multi-hits each frame). Only needed for good.
 	spr.hit_list={}
-	add(to_add,spr)
+	add(spr_add,spr)
 	return spr
 end
 
 function despawn(spr)
-	add(to_del,spr)
+	add(spr_del,spr)
 	spr.inert=true
 end
 
@@ -50,4 +50,11 @@ function prep_prtcl(prtcl)
 	prtcl.dr=prtcl.dr or 0
 	prtcl.ddr=prtcl.ddr or 0
 	return prtcl
+end
+
+function crtn_updt(arr,fx)
+	foreach(arr,function(a)
+		_ENV[fx](a)
+	end)
+	arr={}
 end

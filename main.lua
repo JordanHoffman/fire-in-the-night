@@ -9,7 +9,6 @@ RULES:
 - axn_func and set_anim call fundamental mk_axn which calls async. Use these toplevels and never manual.
 - mk_efx for effects. Sprite can only ever have 1 action, but unlimited effects.
 - function with c_ are meant for coroutines and have yield
-- never create other coroutines within a coroutine since they occur while being looped over.
 ]]
 
 function _init()
@@ -19,8 +18,10 @@ function _init()
 	row_y={80,88,96},
 	good={},
 	bad={},
-	to_del={},
-	to_add={},
+	spr_del={},
+	spr_add={},
+	async_add={},
+	async_del={},
 	routines={},
 	bad_strt=130,
 	melee_x=22,
@@ -76,7 +77,7 @@ function _update()
 		if costatus(v) == "dead" then
 			routines[k] = nil
 		else
-			assert(coresume(v))
+			if (not async_del[k]) assert(coresume(v))
 		end
 	end
 
@@ -122,19 +123,29 @@ function _update()
 		if (p.life<=0) del(prtcls,p)
 	end)
 
-	-- --add/remove
-	foreach(to_add,function(a)
-		create(a)
-	end)
-	foreach(to_del,function(a)
-		delete(a)
-	end)
-	to_add = {}
-	to_del = {}
-
 	map_update()
 	update_lvl(level)
+
+	-- --add/remove
+	foreach(spr_add,function(a)
+		create(a)
+	end)
+	spr_add={}
+	foreach(spr_del,function(a)
+		delete(a)
+	end)
+	spr_del={}
+	for id,fx in pairs(async_add) do
+		add_async(fx,id)
+	end
+	async_add={}
+	for id,_ in pairs(async_del) do
+		rmv_async(id)
+	end
+	async_del={}
 end
+
+
 
 function _draw()
 	cls()

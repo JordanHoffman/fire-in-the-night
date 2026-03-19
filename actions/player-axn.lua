@@ -84,7 +84,7 @@ function c_dizzy(spr,time)
 	end
 end
 
-function efx_dmg_p(bad)
+function axn_dmg_p(bad)
 	p1.life-=bad.atk
 	if p1.life > 0 then
 		efx_dmg(p1)

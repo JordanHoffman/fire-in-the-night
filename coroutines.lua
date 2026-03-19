@@ -1,16 +1,20 @@
-function async(fx)
-	local id = uid()
+function add_async(fx,id)
 	routines[id] = cocreate(fx)
-	return id
+end
+
+function rmv_async(id)
+	routines[id]=nil
 end
 
 -- never use, only called by mk_axn
 function add_axn(spr,fx,clear)
-	add(spr.axn_ids, async(function()
+	local axn_id=uid()
+	add(spr.axn_ids, axn_id)
+	async_add[axn_id]=function()
 		if (spr.inert) yield()
 		fx()
 		if (clear) clr_axn(spr)
-	end))
+	end
 end
 
 --can pass a single fx or an array of fx's if the axn needs multiple, but your longest axn MUST be first since it clears when finished
@@ -32,10 +36,9 @@ function clr_axn(spr,name)
 	spr.axn=name or "idle"
 end
 
---NEVER call within actions.
 function kill_axn(spr,name)
 	foreach(spr.axn_ids, function(id)
-		routines[id] = nil
+		async_del[id]=1
 	end)
 	clr_axn(spr,name)
 end
@@ -50,18 +53,20 @@ function clr_efx(spr,name)
 end
 
 function mk_efx(spr,fx,name)
-	local id = async(function()
+	local id = uid()
+	async_add[id]=function()
 		fx()
 		clr_efx(spr,name)
-	end)
+	end
 	add(spr.efx, {name=name,id=id})
 end
 
 function set_anim(spr,anim)
-	if (spr.anim_id) routines[spr.anim_id] = nil
-	spr.anim_id=async(function()
+	if (spr.anim_id) async_del[spr.anim_id]=1
+	spr.anim_id=uid()
+	async_add[spr.anim_id]=function()
 		c_anim(spr,g_anims[anim])
-	end)
+	end
 end
 
 function c_move(obj,key,val,frames,speed,timing)
