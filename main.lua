@@ -26,18 +26,30 @@ function _init()
 	bad_strt=130,
 	melee_x=22,
 	prtcls={},
-	hit_timer=10
+	hit_timer=10,
+	mode=lvl
+	]]
+
+	--popup
+	dclr[[
+	continue=true
 	]]
 
 	p1=spawn"p1"
 	set_anim(p1,p1.anims.idle)
 
-	level=lvl_1
+	level=cpy_t(lvl_1)
 
 	map_init()
 end
 
 function _update()
+	if mode=="lvl-popup" then
+		if (btnp(0) or btnp(1) or btnp(2) or btnp(3)) continue=not continue
+		if (btnp(4) or btnp(5)) _init()
+		return
+	end
+
 	local row = p1.row
 	local axn = p1.axn
 
@@ -174,6 +186,28 @@ function _draw()
 		p.type = p.type or "circfill"
 		_ENV[p.type](p.x,p.y,p.r,p.c)
 	end)
+
+	if mode=="lvl-popup" then
+		--popup
+		rrectfill(16,16, 96,64,16,5)
+		rrect(16,16, 96,64,16,10)
+
+		--yes btn
+		local yes_c=continue and 10 or 1
+		rrect(32,55,24,11,3,yes_c)
+		print("yes",38,58,yes_c)
+
+		--no btn
+		local no_c=not continue and 10 or 1
+		rrect(72,55,24,11,3,no_c)
+		print("no",80,58,no_c)
+
+
+		local length = print("Continue?",0,-20)
+		local startx = 64 - flr(length/2)
+		print("continue?",startx, 32,10)
+		
+	end
 
 	foreach(logs,function(msg)
 		? msg

@@ -61,6 +61,13 @@ function mk_efx(spr,fx,name)
 	add(spr.efx, {name=name,id=id})
 end
 
+function has_efx(spr,name)
+	for efx in all(spr.efx) do
+		if (efx.name == name) return true
+	end
+	return false
+end
+
 function set_anim(spr,anim)
 	if (spr.anim_id) async_del[spr.anim_id]=1
 	spr.anim_id=uid()

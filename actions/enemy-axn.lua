@@ -10,7 +10,7 @@ function axn_bad_melee(spr)
 			while true do
 				c_wait(20)
 				c_move(spr,"x", p1.x,3)
-				axn_dmg_p(spr)
+				p1_hit(spr)
 				c_move(spr,"x", melee_x,10)
 			end
 		end,
